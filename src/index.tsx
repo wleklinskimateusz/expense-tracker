@@ -3,14 +3,22 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GlobalCSS from "./config/global.css";
+import { FirebaseAPI } from "./firebase.config";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
+
+export const firebaseAPI = new FirebaseAPI();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <GlobalCSS />
-    <App />
+    <Provider store={store}>
+      <GlobalCSS />
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 
