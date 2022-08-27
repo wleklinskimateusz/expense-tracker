@@ -1,6 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  FC,
+} from "react";
 import {
   Alert,
+  Button,
   FileCard,
   FileRejection,
   FileRejectionReason,
@@ -9,23 +17,26 @@ import {
   MimeType,
   Pane,
   rebaseFiles,
+  toaster,
 } from "evergreen-ui";
 import Papa from "papaparse";
-import { useSelector } from "react-redux";
-import { filesSelector } from "../redux/selectors";
 import { addFile } from "../redux/features/filesSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { Data } from "../types";
 
-export const UploadFile = () => {
+export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   const acceptedMimeTypes = useMemo(() => [MimeType.csv], []);
   const maxFiles = 5;
   const maxSizeInBytes = 50 * 1024 ** 2; // 50 MB
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const dispatch = useAppDispatch();
-  const saveFiles = useCallback((files: File[]) => setFiles(files), [setFiles]);
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
+  useEffect(() => {
+    if (error) {
+      toaster.danger(error.message);
+    }
+  }, [error]);
   const values = useMemo(
     () => [
       ...files,
@@ -33,26 +44,27 @@ export const UploadFile = () => {
     ],
     [files, fileRejections]
   );
-  const file = files[0];
   const handleParse = () => {
-    // If user clicks the parse button without
-    // a file we show a error
-    if (!file) return setError(new Error("Enter a valid file"));
-
-    // Initialize a reader which allows user
-    // to read any file or blob.
-    const reader = new FileReader();
-
-    // Event listener on reader when the file
-    // loads, we parse it and set the data.
-    reader.onload = async ({ target }) => {
-      if (target === null) return;
-      const csv = Papa.parse<Data>(target.result as string, { header: true });
-      const parsedData = csv?.data;
-      dispatch(addFile({ title: file.name, data: parsedData }));
-    };
-    reader.readAsText(file);
-    setFiles(files.filter((item) => item !== file));
+    files.forEach((file) => {
+      if (!file) return setError(new Error("Enter a valid file"));
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+        if (target === null) return;
+        const csv = Papa.parse<Data>(target.result as string, { header: true });
+        const parsedData = csv?.data;
+        dispatch(
+          addFile({
+            title: file.name,
+            data: parsedData,
+            modified: file.lastModified,
+            size: file.size,
+          })
+        );
+      };
+      reader.readAsText(file);
+    });
+    setFiles([]);
+    onClose();
   };
   const handleRemove = useCallback(
     (file: File) => {
@@ -72,17 +84,10 @@ export const UploadFile = () => {
         ],
         { acceptedMimeTypes, maxFiles, maxSizeInBytes }
       );
-      saveFiles(accepted);
+      setFiles(accepted);
       setFileRejections(rejected);
     },
-    [
-      acceptedMimeTypes,
-      files,
-      fileRejections,
-      maxFiles,
-      maxSizeInBytes,
-      saveFiles,
-    ]
+    [acceptedMimeTypes, files, fileRejections, maxFiles, maxSizeInBytes]
   );
 
   const fileCountOverLimit = files.length + fileRejections.length - maxFiles;
@@ -99,7 +104,7 @@ export const UploadFile = () => {
         disabled={files.length + fileRejections.length >= maxFiles}
         maxSizeInBytes={maxSizeInBytes}
         maxFiles={maxFiles}
-        onAccepted={saveFiles}
+        onAccepted={setFiles}
         onRejected={setFileRejections}
         renderFile={(file, index) => {
           const { name, size, type } = file;
@@ -115,7 +120,7 @@ export const UploadFile = () => {
           const { message } = fileRejection || {};
 
           return (
-            <React.Fragment key={`${file.name}-${index}`}>
+            <Fragment key={`${file.name}-${index}`}>
               {renderFileCountError && (
                 <Alert
                   intent="danger"
@@ -131,12 +136,14 @@ export const UploadFile = () => {
                 type={type}
                 validationMessage={message}
               />
-            </React.Fragment>
+            </Fragment>
           );
         }}
         values={values}
       />
-      <button onClick={handleParse}>Parse</button>
+      <Button intent="success" onClick={handleParse}>
+        Parse
+      </Button>
     </Pane>
   );
 };

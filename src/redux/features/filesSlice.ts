@@ -13,8 +13,7 @@ export const fileSlice = createSlice({
   initialState,
   reducers: {
     addFile: (state, action: PayloadAction<FileState>) => {
-      const { title, data } = action.payload;
-      state.files = [...state.files, { title, data }];
+      state.files = [...state.files, action.payload];
     },
   },
 });

@@ -1,22 +1,22 @@
 import { Button, Dialog, Pane } from "evergreen-ui";
 import React, { FC, ReactNode } from "react";
 
-export const Popup: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isShown, setIsShown] = React.useState(false);
-
+export const Popup: FC<{
+  children: ReactNode;
+  btnText?: string;
+  close: () => void;
+  isOpen: boolean;
+}> = ({ children, btnText = "Open Dialog", close, isOpen }) => {
   return (
     <Pane>
       <Dialog
-        isShown={isShown}
-        title="Dialog title"
-        onCloseComplete={() => setIsShown(false)}
+        isShown={isOpen}
+        onCloseComplete={close}
         hasFooter={false}
         hasHeader={false}
       >
         {children}
       </Dialog>
-
-      <Button onClick={() => setIsShown(true)}>Import File</Button>
     </Pane>
   );
 };
