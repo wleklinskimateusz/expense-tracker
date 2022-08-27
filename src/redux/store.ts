@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
+import filesSlice from "./features/filesSlice";
 import userReducer from "./features/userSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    files: filesSlice,
   },
 });
 

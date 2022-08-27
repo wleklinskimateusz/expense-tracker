@@ -1,4 +1,4 @@
-import { Button } from "evergreen-ui";
+import { Button, toaster } from "evergreen-ui";
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect } from "react";
 import styled from "styled-components";
@@ -17,7 +17,12 @@ const isEmpty = (obj: Object) =>
 export const LoginPanel = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(userSelector);
-  useEffect(() => console.log(user));
+  const error = firebaseAPI.authError || (firebaseAPI.error as Error);
+  useEffect(() => {
+    if (error) {
+      toaster.danger(error.message);
+    }
+  }, [error]);
   onAuthStateChanged(firebaseAPI.auth, (user) =>
     dispatch(
       setUser({
@@ -39,6 +44,7 @@ export const LoginPanel = () => {
 };
 
 const Container = styled.div`
+  cursor: pointer;
   position: absolute;
   top: 0;
   right: 0;
