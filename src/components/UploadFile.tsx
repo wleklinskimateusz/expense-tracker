@@ -19,10 +19,8 @@ import {
   rebaseFiles,
   toaster,
 } from "evergreen-ui";
-import Papa from "papaparse";
-import { addFile } from "../redux/features/filesSlice";
 import { useAppDispatch } from "../redux/hooks";
-import { Data } from "../types";
+import { createHandleParse } from "../utils/createHandleParse";
 
 export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   const acceptedMimeTypes = useMemo(() => [MimeType.csv], []);
@@ -44,28 +42,13 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
     ],
     [files, fileRejections]
   );
-  const handleParse = () => {
-    files.forEach((file) => {
-      if (!file) return setError(new Error("Enter a valid file"));
-      const reader = new FileReader();
-      reader.onload = async ({ target }) => {
-        if (target === null) return;
-        const csv = Papa.parse<Data>(target.result as string, { header: true });
-        const parsedData = csv?.data;
-        dispatch(
-          addFile({
-            title: file.name,
-            data: parsedData,
-            modified: file.lastModified,
-            size: file.size,
-          })
-        );
-      };
-      reader.readAsText(file);
-    });
-    setFiles([]);
-    onClose();
-  };
+  const handleParse = createHandleParse(
+    files,
+    setError,
+    dispatch,
+    setFiles,
+    onClose
+  );
   const handleRemove = useCallback(
     (file: File) => {
       const updatedFiles = files.filter(
