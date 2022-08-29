@@ -6,6 +6,7 @@ import GlobalCSS from "./config/global.css";
 import { FirebaseAPI } from "./firebase.config";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
 export const firebaseAPI = new FirebaseAPI();
 
@@ -17,7 +18,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <GlobalCSS />
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

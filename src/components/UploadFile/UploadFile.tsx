@@ -19,8 +19,8 @@ import {
   rebaseFiles,
   toaster,
 } from "evergreen-ui";
-import { useAppDispatch } from "../redux/hooks";
-import { createHandleParse } from "../utils/createHandleParse";
+import { useAppDispatch } from "../../redux/hooks";
+import { createHandleParse } from "../../utils/createHandleParse";
 
 export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   const acceptedMimeTypes = useMemo(() => [MimeType.csv], []);

@@ -1,12 +1,11 @@
-import { Button, Dialog, Pane } from "evergreen-ui";
+import { Dialog, Pane } from "evergreen-ui";
 import React, { FC, ReactNode } from "react";
 
 export const Popup: FC<{
   children: ReactNode;
-  btnText?: string;
   close: () => void;
   isOpen: boolean;
-}> = ({ children, btnText = "Open Dialog", close, isOpen }) => {
+}> = ({ children, close, isOpen }) => {
   return (
     <Pane>
       <Dialog
