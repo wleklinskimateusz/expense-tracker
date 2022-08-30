@@ -1,17 +1,25 @@
-import { Dispatch } from "@reduxjs/toolkit";
+import { Button } from "evergreen-ui";
 import Papa from "papaparse";
-import { addFile } from "../redux/features/filesSlice";
-import { Data } from "../types";
+import React, { FC } from "react";
+import { addFile } from "../../redux/features";
+import { useAppDispatch } from "../../redux/hooks";
+import { Data } from "../../types";
 
-export const createHandleParse =
-  (
-    files: File[],
-    setError: (e: Error | null) => void,
-    dispatch: Dispatch,
-    setFiles: (f: File[]) => void,
-    onClose: () => void
-  ) =>
-  () => {
+interface Props {
+  files: File[];
+  setError: (e: Error | null) => void;
+  onClose: () => void;
+  setFiles: (f: File[]) => void;
+}
+
+export const ParseButton: FC<Props> = ({
+  files,
+  setError,
+  onClose,
+  setFiles,
+}) => {
+  const dispatch = useAppDispatch();
+  const handleParse = () => {
     files.forEach((file) => {
       if (!file) return setError(new Error("Enter a valid file"));
       const reader = new FileReader();
@@ -33,3 +41,9 @@ export const createHandleParse =
     setFiles([]);
     onClose();
   };
+  return (
+    <Button intent="success" onClick={handleParse}>
+      Parse
+    </Button>
+  );
+};

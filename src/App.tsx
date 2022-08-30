@@ -1,15 +1,17 @@
-import { majorScale, Pane } from "evergreen-ui";
 import React from "react";
-import styled from "styled-components";
-import { LoginPanel } from "./components/LoginPanel";
-import { userSelector } from "./redux/selectors";
-import { firebaseAPI } from ".";
-import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { onAuthStateChanged } from "firebase/auth";
-import { setUser } from "./redux/features/userSlice";
-import { NotLoggedIn } from "./components/NotLoggedIn";
-import { UploadPage } from "./pages/UploadPage";
 import { Route, Routes } from "react-router-dom";
+
+import { majorScale, Pane } from "evergreen-ui";
+import styled from "styled-components";
+
+import { firebaseAPI } from ".";
+import { onAuthStateChanged } from "firebase/auth";
+
+import { LoginPanel, NotLoggedIn } from "./components";
+import { UploadPage, Settings } from "./pages";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { userSelector } from "./redux/selectors";
+import { setUser } from "./redux/features";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +34,7 @@ const App = () => {
     <Container margin={majorScale(2)} padding={majorScale(2)}>
       <Routes>
         <Route path="/" element={<UploadPage />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
       <LoginPanel />
     </Container>

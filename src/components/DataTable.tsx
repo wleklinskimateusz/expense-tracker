@@ -1,5 +1,5 @@
-import { majorScale, Table } from "evergreen-ui";
 import React, { FC } from "react";
+import { majorScale, Table } from "evergreen-ui";
 
 interface Data {
   [key: string]: string | number;

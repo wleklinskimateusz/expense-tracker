@@ -1,5 +1,5 @@
-import { Dialog, Pane } from "evergreen-ui";
 import React, { FC, ReactNode } from "react";
+import { Dialog, Pane } from "evergreen-ui";
 
 export const Popup: FC<{
   children: ReactNode;

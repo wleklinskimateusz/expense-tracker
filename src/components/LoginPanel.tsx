@@ -1,8 +1,10 @@
-import { toaster } from "evergreen-ui";
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { firebaseAPI } from "..";
+
+import { toaster } from "evergreen-ui";
+import styled from "styled-components";
 import { margin, padding } from "../config/styles";
+
 import { ProfileMenu } from "./ProfileMenu";
 
 export const LoginPanel = () => {

@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import {
   Alert,
-  Button,
   FileCard,
   FileRejection,
   FileRejectionReason,
@@ -19,8 +18,8 @@ import {
   rebaseFiles,
   toaster,
 } from "evergreen-ui";
-import { useAppDispatch } from "../../redux/hooks";
-import { createHandleParse } from "../../utils/createHandleParse";
+import { ParseButton } from "./ParseButton";
+import { TestAnchor } from "../TestAnchor";
 
 export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   const acceptedMimeTypes = useMemo(() => [MimeType.csv], []);
@@ -28,7 +27,6 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   const maxSizeInBytes = 50 * 1024 ** 2; // 50 MB
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<Error | null>(null);
-  const dispatch = useAppDispatch();
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
   useEffect(() => {
     if (error) {
@@ -41,13 +39,6 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
       ...fileRejections.map((fileRejection) => fileRejection.file),
     ],
     [files, fileRejections]
-  );
-  const handleParse = createHandleParse(
-    files,
-    setError,
-    dispatch,
-    setFiles,
-    onClose
   );
   const handleRemove = useCallback(
     (file: File) => {
@@ -101,7 +92,6 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
               fileRejection.reason !== FileRejectionReason.OverFileLimit
           );
           const { message } = fileRejection || {};
-
           return (
             <Fragment key={`${file.name}-${index}`}>
               {renderFileCountError && (
@@ -111,22 +101,27 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
                   title={fileCountError}
                 />
               )}
-              <FileCard
-                isInvalid={fileRejection != null}
-                name={name}
-                onRemove={() => handleRemove(file)}
-                sizeInBytes={size}
-                type={type}
-                validationMessage={message}
-              />
+              <TestAnchor tag={"file-uploaded"}>
+                <FileCard
+                  isInvalid={fileRejection != null}
+                  name={name}
+                  onRemove={() => handleRemove(file)}
+                  sizeInBytes={size}
+                  type={type}
+                  validationMessage={message}
+                />
+              </TestAnchor>
             </Fragment>
           );
         }}
         values={values}
       />
-      <Button intent="success" onClick={handleParse}>
-        Parse
-      </Button>
+      <ParseButton
+        files={files}
+        setError={setError}
+        onClose={onClose}
+        setFiles={setFiles}
+      />
     </Pane>
   );
 };

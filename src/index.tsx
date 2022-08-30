@@ -1,12 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import GlobalCSS from "./config/global.css";
+
 import { FirebaseAPI } from "./firebase.config";
+import GlobalCSS from "./config/global.css";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+
+import App from "./App";
 
 export const firebaseAPI = new FirebaseAPI();
 

@@ -1,7 +1,8 @@
-import { Avatar, Menu, Popover, Position, toaster } from "evergreen-ui";
 import React from "react";
-import { useSelector } from "react-redux";
 import { firebaseAPI } from "..";
+
+import { Avatar, Menu, Popover, Position, toaster } from "evergreen-ui";
+import { useSelector } from "react-redux";
 import { userSelector } from "../redux/selectors";
 
 export const ProfileMenu = () => {
