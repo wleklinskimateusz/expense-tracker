@@ -72,6 +72,7 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <Pane maxWidth={654} margin={majorScale(2)}>
       <FileUploader
+        role="input"
         acceptedMimeTypes={acceptedMimeTypes}
         label="Upload Files"
         description="You can upload up to 5 files. Files can be up to 50MB. You can upload only .csv formats"
@@ -125,3 +126,5 @@ export const UploadFile: FC<{ onClose: () => void }> = ({ onClose }) => {
     </Pane>
   );
 };
+
+UploadFile.displayName = "UploadFile";

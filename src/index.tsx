@@ -5,25 +5,28 @@ import reportWebVitals from "./reportWebVitals";
 
 import { FirebaseAPI } from "./firebase.config";
 import GlobalCSS from "./config/global.css";
-import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
-import App from "./App";
+import { App } from "./App";
+import { setupStore } from "./redux/store";
+
+const store = setupStore();
 
 export const firebaseAPI = new FirebaseAPI();
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  (document.getElementById("root") as HTMLElement) ||
+    document.createElement("div")
 );
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <GlobalCSS />
-      <BrowserRouter>
+    <BrowserRouter>
+      <Provider store={store}>
+        <GlobalCSS />
         <App />
-      </BrowserRouter>
-    </Provider>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { userSelector } from "./redux/selectors";
 import { setUser } from "./redux/features";
 
-const App = () => {
+export const App = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(userSelector);
   onAuthStateChanged(firebaseAPI.auth, (user) =>
@@ -47,5 +47,3 @@ const Container = styled(Pane)`
   flex-direction: column;
   align-items: center;
 `;
-
-export default App;
